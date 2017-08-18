@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>PageLecture.qml</file>
+        <file>qtquickcontrols2.conf</file>
+        <file>PageMusique.qml</file>
+        <file>icone/music.png</file>
+        <file>icone/next.png</file>
+        <file>icone/pause.png</file>
+        <file>icone/play.png</file>
+        <file>icone/previous.png</file>
+    </qresource>
+</RCC>
