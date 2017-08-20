@@ -1,12 +1,15 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 
+#include "options.hpp"
+
 #include <QObject>
 #include <QString>
 #include <QMediaPlayer>
 #include <QDir>
 #include <QUrl>
 #include <QVector>
+#include <QList>
 
 class Player : public QObject
 {
@@ -32,13 +35,16 @@ public slots:
     void suivant(void);
     void pause(void);
     void play(void);
+    void addMusic(const QList<QUrl> musics);
 
     float progression(void);
     QString piste(void);
+    QString piste(const unsigned int index);
     QString tempsTotal(void);
     QString tempsActuel(void);
     bool playing(void);
     bool loaded(void);
+    QList<QString> allMusiques(void);
 };
 
 #endif // PLAYER_HPP

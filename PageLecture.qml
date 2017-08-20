@@ -14,6 +14,7 @@ Page {
             titreMusique.text = player.piste();
             tempsActuelMusique.text = player.tempsActuel();
             tempsTotalMusique.text = player.tempsTotal();
+            progressBar.value = player.progression();
         }
     }
 
@@ -47,7 +48,10 @@ Page {
 
                     onClicked:
                     {
-                        player.precedent();
+                        if(player.loaded())
+                        {
+                            player.precedent();
+                        }
                     }
                 }
             }
@@ -96,7 +100,10 @@ Page {
 
                     onClicked:
                     {
-                        player.suivant();
+                        if(player.loaded())
+                        {
+                            player.suivant();
+                        }
                     }
                 }
             }

@@ -26,7 +26,7 @@ ApplicationWindow {
         id: tabBar
         currentIndex: swipeView.currentIndex
         TabButton {
-            text: qsTr("Lecure")
+            text: qsTr("Lecture")
         }
         TabButton {
             text: qsTr("Musiques")

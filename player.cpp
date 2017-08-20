@@ -70,10 +70,20 @@ void Player::play(void)
 
 float Player::progression(void)
 {
-    if(this->loaded())
-        return (mediaPlayer->position() / mediaPlayer->duration());
+#ifdef DEBUG
+    qDebug() << mediaPlayer->position() << " " << mediaPlayer->duration();
+#endif
+    if(this->loaded() && mediaPlayer->position() > 0)
+    {
+#ifdef DEBUG
+        qDebug() << (float)mediaPlayer->position() / (float)mediaPlayer->duration();
+#endif
+        return (float)mediaPlayer->position() / (float)mediaPlayer->duration();
+    }
     else
-        return 0;
+    {
+        return 0.0;
+    }
 }
 
 QString Player::piste(void)
@@ -87,6 +97,14 @@ QString Player::piste(void)
     }
     else
         return "Musique non chargée";
+}
+
+QString Player::piste(const unsigned int index)
+{
+    QString piste = musiques->at(index);
+    QStringList pisteChemin = piste.split("/");
+    QStringList pisteExtension = pisteChemin.at(pisteChemin.size() - 1).split(".");
+    return pisteExtension.at(0);
 }
 
 QString Player::tempsTotal(void)
@@ -126,4 +144,26 @@ QString Player::convertirTemps(const unsigned int temps)
 bool Player::loaded()
 {
     return musiques->size() == 0 ? false : true;
+}
+
+void Player::addMusic(const QList<QUrl> musics)
+{
+    for(unsigned int i = 0; i < (unsigned int)musics.size(); i++)
+    {
+        qDebug() << musics[i].toString();
+        QString cheminEntierMusique = musics.at(i).toString();
+        QStringList cheminMusique = cheminEntierMusique.split("://");
+        musiques->push_back(cheminMusique.at(1));
+    }
+}
+
+QList<QString> Player::allMusiques()
+{
+    QList<QString> toutesMusiques;
+    for(unsigned int i = 0; i < (unsigned int)musiques->size(); i++)
+    {
+        toutesMusiques.push_back(this->piste(i));
+    }
+
+    return toutesMusiques;
 }

@@ -6,6 +6,7 @@ SOURCES += main.cpp \
     player.cpp
 
 HEADERS += player.hpp \
+    options.hpp
 
 RESOURCES += qml.qrc
 
