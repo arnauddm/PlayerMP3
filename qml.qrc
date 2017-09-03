@@ -9,5 +9,6 @@
         <file>icone/pause.png</file>
         <file>icone/play.png</file>
         <file>icone/previous.png</file>
+        <file>Slider.qml</file>
     </qresource>
 </RCC>

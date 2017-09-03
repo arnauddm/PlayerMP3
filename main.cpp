@@ -16,6 +16,5 @@ int main(int argc, char *argv[])
 
     view.setSource(QUrl(QLatin1String("qrc:/main.qml")));
 
-
     return app.exec();
 }

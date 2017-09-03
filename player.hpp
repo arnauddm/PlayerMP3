@@ -22,7 +22,7 @@ public:
 private:
     QMediaPlayer *mediaPlayer;
     bool isPlaying;
-    unsigned int index;
+    int index;
     QVector<QString> *musiques;
     QString chemin;
 
@@ -36,6 +36,7 @@ public slots:
     void pause(void);
     void play(void);
     void addMusic(const QList<QUrl> musics);
+    void setTempsMusique(const float progression);
 
     float progression(void);
     QString piste(void);

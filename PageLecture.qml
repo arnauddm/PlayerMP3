@@ -2,8 +2,11 @@ import QtQuick 2.7
 import QtQuick.Controls 2.1
 import QtQuick.Controls.Styles 1.4
 import QtQuick.Dialogs 1.2
+import QtQuick.Window 2.0
 
 Page {
+    //width: window.width
+    //height: window.height
     Timer {
         interval: 100;
         running: true;
@@ -14,7 +17,11 @@ Page {
             titreMusique.text = player.piste();
             tempsActuelMusique.text = player.tempsActuel();
             tempsTotalMusique.text = player.tempsTotal();
-            progressBar.value = player.progression();
+
+            if(!progressBar.pressed)
+            {
+                progressBar.value = player.progression();
+            }
         }
     }
 
@@ -120,10 +127,19 @@ Page {
                 text: qsTr("0:00");
             }
 
-            ProgressBar {
+            Slider {
                 id: progressBar
                 anchors.verticalCenter: parent.verticalCenter
                 height: 10
+                from: 0
+                to: 1
+
+                onPressedChanged: {
+                    if(!progressBar.pressed)
+                    {
+                        player.setTempsMusique(this.value);
+                    }
+                }
             }
 
             Text {

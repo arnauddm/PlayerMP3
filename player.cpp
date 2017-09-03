@@ -6,7 +6,7 @@ Player::Player(QObject *parent)
     musiques = new QVector<QString>;
 
     isPlaying = false;
-    index = 0;
+    index = 1;
 }
 
 void Player::setDossier(const QString dossier)
@@ -26,7 +26,9 @@ void Player::ouvrir(void)
     for(unsigned int i = 0; i < (unsigned int)liste.size(); i++)
     {
         musiques->push_back(chemin + "/" + liste.at(i));
+#ifdef DEBUG
         qDebug() << musiques->at(i);
+#endif
     }
 
     index = 0;
@@ -38,21 +40,33 @@ void Player::precedent(void)
     index--;
 
     if(index < 0)
-        index = musiques->size();
+        index = musiques->size() - 1;
+
+#ifdef DEBUG
+    qDebug() << "Index de la musique actuelle : " << index;
+#endif
 
     mediaPlayer->setMedia(QUrl::fromLocalFile(musiques->at(index)));
-    play();
+
+    if(isPlaying)
+        play();
 }
 
 void Player::suivant(void)
 {
     index++;
 
-    if(index > musiques->size())
+    if(index > musiques->size() - 1)
         index = 0;
 
+#ifdef DEBUG
+    qDebug() << "Index de la musique actuelle : " << index;
+#endif
+
     mediaPlayer->setMedia(QUrl::fromLocalFile(musiques->at(index)));
-    play();
+
+    if(isPlaying)
+        play();
 }
 
 void Player::pause(void)
@@ -63,22 +77,21 @@ void Player::pause(void)
 
 void Player::play(void)
 {
-    //qDebug() << "Play";
+#ifdef DEBUG
+    qDebug() << "Play";
+#endif
     mediaPlayer->play();
     isPlaying = true;
 }
 
 float Player::progression(void)
 {
-#ifdef DEBUG
-    qDebug() << mediaPlayer->position() << " " << mediaPlayer->duration();
-#endif
     if(this->loaded() && mediaPlayer->position() > 0)
     {
-#ifdef DEBUG
-        qDebug() << (float)mediaPlayer->position() / (float)mediaPlayer->duration();
-#endif
-        return (float)mediaPlayer->position() / (float)mediaPlayer->duration();
+        float prog = (float)mediaPlayer->position() / (float)mediaPlayer->duration();
+        if(prog == 1)
+            this->suivant();
+        return prog;
     }
     else
     {
@@ -92,7 +105,7 @@ QString Player::piste(void)
     {
         QString piste = musiques->at(index);
         QStringList pisteChemin = piste.split("/");
-        QStringList pisteExtension = pisteChemin.at(pisteChemin.size() -1).split(".");
+        QStringList pisteExtension = pisteChemin.at(pisteChemin.size() -1).split(".mp");
         return pisteExtension.at(0);
     }
     else
@@ -103,7 +116,7 @@ QString Player::piste(const unsigned int index)
 {
     QString piste = musiques->at(index);
     QStringList pisteChemin = piste.split("/");
-    QStringList pisteExtension = pisteChemin.at(pisteChemin.size() - 1).split(".");
+    QStringList pisteExtension = pisteChemin.at(pisteChemin.size() - 1).split(".mp");
     return pisteExtension.at(0);
 }
 
@@ -150,7 +163,9 @@ void Player::addMusic(const QList<QUrl> musics)
 {
     for(unsigned int i = 0; i < (unsigned int)musics.size(); i++)
     {
+#ifdef DEBUG
         qDebug() << musics[i].toString();
+#endif
         QString cheminEntierMusique = musics.at(i).toString();
         QStringList cheminMusique = cheminEntierMusique.split("://");
         musiques->push_back(cheminMusique.at(1));
@@ -166,4 +181,15 @@ QList<QString> Player::allMusiques()
     }
 
     return toutesMusiques;
+}
+
+void Player::setTempsMusique(const float progression)
+{
+    unsigned int nouveauTemps = progression * mediaPlayer->duration();
+
+#ifdef DEBUG
+    qDebug() << "Nouveau temps de lecture : " << nouveauTemps;
+#endif
+
+    mediaPlayer->setPosition((qint64)nouveauTemps);
 }
